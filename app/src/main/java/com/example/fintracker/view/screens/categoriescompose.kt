@@ -1,8 +1,6 @@
 package com.example.fintracker.view.screens
 
-import android.graphics.Color
-import android.graphics.Typeface
-import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -31,16 +31,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.fintracker.view.widgets.CategoryDropdown
+import com.example.fintracker.view.widgets.ChartView
+import com.example.fintracker.view.widgets.SingleItemView
 import com.example.fintracker.viewmodel.CategoryViewModel
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
 
 
 
@@ -55,7 +54,6 @@ fun CategoryScreen(navController: NavController,date:String) {
 
     val expList by viewModel.totalByCategoryLiveData.collectAsState(initial = emptyList())
     val categoryBudget by viewModel.categoryBudgetLiveData.collectAsState(initial = "")
-
     Scaffold { padding ->
         Column(
             modifier = Modifier
@@ -67,11 +65,14 @@ fun CategoryScreen(navController: NavController,date:String) {
             }) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
             }
-            Text(text = "Budget in Category : $categoryBudget")
-            ChartView(
-                Modifier
-                    .padding(padding)
-                    .height(300.dp),expList)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(text = "Budget in Category : $categoryBudget", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+            }
+           ChartView(
+               Modifier
+                   .padding(padding)
+                   .height(300.dp),expList)
 
             CategoryDropdown {
                 viewModel.updateCategory(it.name)
@@ -108,54 +109,7 @@ fun CategoryScreen(navController: NavController,date:String) {
 }
 
 
-@Composable
-fun ChartView(modifier:Modifier, expList:List<PieEntry>){
 
-    AndroidView(
-        factory = { context ->
-            val pieChart = PieChart(context).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                description.isEnabled = false
-                isDrawHoleEnabled = true
-                setHoleColor(Color.WHITE)
-                setUsePercentValues(true)
-                setEntryLabelTextSize(12f)
-                setEntryLabelColor(Color.BLACK)
-                legend.orientation = Legend.LegendOrientation.VERTICAL
-                legend.isWordWrapEnabled = true
-                animateY(1000)
-            }
-            if(pieChart.isEmpty){
-                pieChart.clear()
-            }
-            pieChart
-        },
-        update = { pieChart ->
-
-            if (expList.isEmpty()) {
-                pieChart.clear()
-                pieChart.invalidate()
-                return@AndroidView
-            }
-
-            val colors = listOf(Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.MAGENTA)
-
-            val pieDataSet = PieDataSet(expList, "Expense Categories").apply {
-                setColors(colors)
-                valueTextSize = 14f
-                valueTypeface = Typeface.DEFAULT_BOLD
-            }
-
-            val pieData = PieData(pieDataSet)
-            pieChart.data = pieData
-            pieChart.invalidate()
-        },
-        modifier = modifier
-    )
-}
 
 
 @Composable

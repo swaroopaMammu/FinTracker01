@@ -19,9 +19,9 @@ interface BudgetDao {
     fun getTotalBudgetByMonthYear(yearMonth: String): Flow<Long>
 
     @Query(
-        "SELECT COALESCE(SUM(amount), 0) as total " +
-                "FROM expense_table " +
-                "WHERE date LIKE :yearMonth || '%' " +
+        "SELECT COALESCE(SUM(monthlyBudget), 0) as total " +
+                "FROM budget_table " +
+                "WHERE monthYear LIKE :yearMonth || '%' " +
                 "AND category = :category"
     )
     fun getBudgetByCategoryAndMonth(yearMonth: String,category: String): Flow<Long>

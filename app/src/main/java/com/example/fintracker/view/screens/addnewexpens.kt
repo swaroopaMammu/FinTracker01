@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fintracker.utils.CategoryLabels
+import com.example.fintracker.view.widgets.CategoryDropdown
 import com.example.fintracker.viewmodel.NewEntryViewModel
 
 @Composable
@@ -204,46 +205,4 @@ fun AmountCardView(viewModel:NewEntryViewModel){
 
        }
     }
-}
-
-@Composable
-fun CategoryDropdown(category:String="Category",onClick: (category:CategoryLabels)->Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    val items = CategoryLabels.entries.toTypedArray()
-    var selectedItem by remember { mutableStateOf(category) }
-
-
-    Card(  modifier = Modifier
-        .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-        .fillMaxWidth()
-        .wrapContentHeight(),
-        elevation = CardDefaults.cardElevation(8.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)){
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp), horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically) {
-            Text(text = selectedItem, color = Color.White)
-            IconButton(onClick = { expanded = true }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "", tint = Color.White)
-            }
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            items.forEach { item ->
-                DropdownMenuItem(
-                    text = { Text(item.name) },
-                    onClick = {
-                        selectedItem = item.name
-                        onClick.invoke(CategoryLabels.valueOf(selectedItem))
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-
 }

@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -38,9 +35,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fintracker.R
-import com.example.fintracker.data.db.entity.ExpenseModel
 import com.example.fintracker.utils.AppConstants
-import com.example.fintracker.utils.formatDateMonth
+import com.example.fintracker.view.widgets.SingleItemView
 import com.example.fintracker.viewmodel.HomeViewModel
 
 @Composable
@@ -162,48 +158,6 @@ fun ItemListView(modifier: Modifier,viewModel: HomeViewModel,navController: NavC
      }
 }
 
-@Composable
-fun SingleItemView(model: ExpenseModel,onClick:(id:Int)->Unit){
-
-      Card(onClick = { onClick(model.expId) }, modifier = Modifier
-          .fillMaxWidth()
-          .wrapContentHeight()
-          .padding(16.dp),
-          elevation = CardDefaults.cardElevation(4.dp),
-          shape = RoundedCornerShape(8.dp)
-      ) {
-          ConstraintLayout(modifier = Modifier
-              .fillMaxWidth()
-              .padding(16.dp)) {
-              val (iconId,titleId,amountId,dateId) = createRefs()
-
-              Icon(painter = painterResource(id = R.drawable.icon_round_work),
-             contentDescription = "category", modifier = Modifier
-                      .constrainAs(iconId) {
-                          top.linkTo(parent.top)
-                          start.linkTo(parent.start)
-                      }
-                      .size(40.dp) )
-              Text(text = model.title, fontSize = 14.sp, textAlign = TextAlign.Left , modifier = Modifier.constrainAs(titleId) {
-                  top.linkTo(parent.top)
-                  bottom.linkTo(iconId.bottom)
-                  end.linkTo(amountId.start, margin = 10.dp)
-                  start.linkTo(iconId.end, margin = 10.dp)
-                  width = Dimension.fillToConstraints
-              })
-              Text(text = "₹${model.amount}",fontSize = 16.sp, modifier = Modifier.constrainAs(amountId) {
-                  top.linkTo(parent.top)
-                  end.linkTo(parent.end)
-              })
-              Text(text = model.date.formatDateMonth(),fontSize = 12.sp, modifier = Modifier.constrainAs(dateId) {
-                  top.linkTo(amountId.bottom)
-                  end.linkTo(parent.end)
-              })
-
-
-      }
-      }
-}
 
 
 
