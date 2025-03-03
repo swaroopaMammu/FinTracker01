@@ -16,8 +16,6 @@ interface ExpenseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewExpense(expenseModel: ExpenseModel)
 
-    @Update
-    suspend fun updateMonthlyTable(expenseModel: ExpenseModel)
 
     @Query("DELETE FROM expense_table WHERE expId = :id")
     suspend fun deleteExpenseById(id: Int)

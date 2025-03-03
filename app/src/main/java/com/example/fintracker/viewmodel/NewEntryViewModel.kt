@@ -74,22 +74,14 @@ class NewEntryViewModel @Inject constructor(private val repo: ExpenseRepository)
                 notes = notesLiveData.value?:"",
                 expId = expId?:0
             )
-            if(isNew){
+
                 viewModelScope.launch {
                     repo.insertNewExpense(data)
                 }
-            }else{
-                updateMonthlyTable(data)
-            }
             reSetAllNEwEntryFields()
         }
     }
 
-    private fun updateMonthlyTable(data:ExpenseModel){
-        viewModelScope.launch {
-            repo.updateMonthlyTable(data)
-        }
-    }
 
     fun deleteExpense(id: Int?){
         viewModelScope.launch {

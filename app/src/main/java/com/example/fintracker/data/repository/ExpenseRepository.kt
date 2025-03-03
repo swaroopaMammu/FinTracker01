@@ -19,9 +19,7 @@ class ExpenseRepository @Inject constructor(private val expenseDao: ExpenseDao,p
     suspend fun insertNewExpense(expenseModel: ExpenseModel){
         expenseDao.insertNewExpense(expenseModel)
     }
-    suspend fun updateMonthlyTable(expenseModel: ExpenseModel){
-        expenseDao.updateMonthlyTable(expenseModel)
-    }
+
     suspend fun deleteExpense(id: Int){
         expenseDao.deleteExpenseById(id)
     }
