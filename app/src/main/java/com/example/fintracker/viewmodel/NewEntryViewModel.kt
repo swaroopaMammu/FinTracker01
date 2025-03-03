@@ -1,5 +1,6 @@
 package com.example.fintracker.viewmodel
 
+import androidx.compose.runtime.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,9 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.fintracker.data.db.entity.ExpenseModel
 import com.example.fintracker.data.repository.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +25,7 @@ class NewEntryViewModel @Inject constructor(private val repo: ExpenseRepository)
     val amountLiveData: LiveData<String> = _amountLiveData
     private val _titleLiveData = MutableLiveData("")
     val titleLiveData : LiveData<String> = _titleLiveData
+
 
 
 
@@ -93,21 +92,26 @@ class NewEntryViewModel @Inject constructor(private val repo: ExpenseRepository)
         }
     }
 
-    fun deleteExpense(id:String){
+    fun deleteExpense(id: Int?){
         viewModelScope.launch {
-            repo.deleteExpense(id.toInt())
+            id?.let {
+                repo.deleteExpense(it)
+            }
+
         }
     }
 
-    fun getExpensesDataById(id:Int?){
+    fun getExpensesDataById(id: Int?){
         id?.let {
             viewModelScope.launch {
-                repo.getExpensesDataById(it).collectLatest { data ->
-                    updateTitle(data.title)
-                    updateAmount(data.amount.toString())
-                    updateDate(data.date)
-                    updateNote(data.notes)
-                    updateCategory(data.category)
+                repo.getExpensesDataById(it).collectLatest { d ->
+                    d?.let {  data ->
+                        updateTitle(data.title)
+                        updateAmount(data.amount.toString())
+                        updateDate(data.date)
+                        updateNote(data.notes)
+                        updateCategory(data.category) }
+
                 }
             }
         }

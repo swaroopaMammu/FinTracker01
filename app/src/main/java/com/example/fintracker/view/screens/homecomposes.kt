@@ -118,7 +118,7 @@ fun HomeScreen(navController:NavController){
                 end.linkTo(addNewBtnId.start)
                 width = Dimension.fillToConstraints
             })
-            Button(onClick = { navController.navigate("${AppConstants.ADD_NEW}/{}") }, modifier = Modifier.constrainAs(addNewBtnId) {
+            Button(onClick = { navController.navigate("${AppConstants.ADD_NEW}/") }, modifier = Modifier.constrainAs(addNewBtnId) {
                 top.linkTo(categoryBtnId.bottom, margin = 20.dp)
                 end.linkTo(parent.end, margin = 16.dp)
             }) {
@@ -159,7 +159,7 @@ fun ItemListView(modifier: Modifier,viewModel: HomeViewModel,navController: NavC
      ) {
          items(expList.toList())  { item ->
             SingleItemView(item) {
-                navController.navigate("${AppConstants.ADD_NEW}/${it}")
+                navController.navigate("${AppConstants.ADD_NEW}/$it")
             }
          }
      }

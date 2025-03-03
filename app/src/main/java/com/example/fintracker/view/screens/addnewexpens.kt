@@ -28,7 +28,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -44,12 +43,12 @@ import com.example.fintracker.utils.CategoryLabels
 import com.example.fintracker.viewmodel.NewEntryViewModel
 
 @Composable
-fun AddNewExpense(navController: NavController,expId:String){
+fun AddNewExpense(navController: NavController, expId:String){
     val viewModel:NewEntryViewModel = hiltViewModel()
     val newEntry = expId.isEmpty()
+    val id = expId.toIntOrNull()
     LaunchedEffect(Unit) {
         if (!newEntry) {
-            val id = expId.toIntOrNull()
             viewModel.getExpensesDataById(id)
         }
     }
@@ -71,10 +70,10 @@ fun AddNewExpense(navController: NavController,expId:String){
                     if(newEntry){
                         viewModel.insertNewExpense()
                     }else{
-                        viewModel.deleteExpense(expId)
+                        viewModel.deleteExpense(id)
                     }
                     navController.popBackStack()
-                     },
+                          },
                 colors = ButtonDefaults.buttonColors(Color.DarkGray)) {
                 Text(text = if(newEntry)"Save Entry" else "Delete Entry", color = Color.White)
             }

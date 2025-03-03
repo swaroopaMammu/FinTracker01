@@ -24,7 +24,7 @@ interface ExpenseDao {
     suspend fun deleteExpenseById(id: Int)
 
     @Query("SELECT * FROM expense_table WHERE expId = :id")
-    fun getExpensesDataById(id:Int): Flow<ExpenseModel>
+    fun getExpensesDataById(id:Int): Flow<ExpenseModel?>
 
     @Query("SELECT * FROM expense_table")
     fun getExpensesData(): Flow<List<ExpenseModel>>

@@ -128,10 +128,21 @@ fun ChartView(modifier:Modifier, expList:List<PieEntry>){
                 setEntryLabelColor(Color.BLACK)
                 legend.orientation = Legend.LegendOrientation.VERTICAL
                 legend.isWordWrapEnabled = true
+                animateY(1000)
+            }
+            if(pieChart.isEmpty){
+                pieChart.clear()
             }
             pieChart
         },
         update = { pieChart ->
+
+            if (expList.isEmpty()) {
+                pieChart.clear()
+                pieChart.invalidate()
+                return@AndroidView
+            }
+
             val colors = listOf(Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.MAGENTA)
 
             val pieDataSet = PieDataSet(expList, "Expense Categories").apply {
