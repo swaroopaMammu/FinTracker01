@@ -63,6 +63,8 @@ fun HomeScreen(navController:NavController){
                 viewModel.updateDate(date)
                 viewModel.updateMonth(month)
                 viewModel.getExpensesByDate()
+                viewModel.getTotalSpendByMonth()
+                viewModel.getTotalBudgetByMonthYear()
             }, label = dateState.value)
             TopCardView(modifier = Modifier.constrainAs(expenseCardId){
                 top.linkTo(dateId.bottom)
