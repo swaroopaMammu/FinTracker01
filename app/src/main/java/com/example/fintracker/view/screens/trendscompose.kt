@@ -1,39 +1,45 @@
 package com.example.fintracker.view.screens
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.widget.LinearLayout
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fintracker.viewmodel.TrendsViewModel
 import com.github.mikephil.charting.formatter.ValueFormatter
+import androidx.compose.ui.unit.sp
 
 
 @Composable
 fun TrendsScreen(navController: NavController, date: String) {
     val viewModel: TrendsViewModel = hiltViewModel()
 
-    // Fetch data when date changes
     LaunchedEffect(date) {
         viewModel.getExpenseListPerMonth(date)
     }
@@ -41,10 +47,18 @@ fun TrendsScreen(navController: NavController, date: String) {
     val expList by viewModel.totalByMonthLiveData.collectAsState(initial = emptyList())
 
     Scaffold { padding ->
-        BarChartView(
-            modifier = Modifier.padding(padding),
-            list = expList
-        )
+        Column(modifier = Modifier.padding(padding)) {
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(imageVector = Icons.Default.Close,contentDescription = "")
+            }
+            Row(horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Monthly Spending Trends", fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            }
+              BarChartView(
+                modifier = Modifier.padding(10.dp),
+                list = expList
+            )
+        }
     }
 }
 
@@ -79,7 +93,7 @@ fun BarChartView(modifier: Modifier, list: List<BarEntry>) {
                 valueTypeface = Typeface.DEFAULT_BOLD
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
-                        return "$${value.toInt()}"
+                        return "₹${value.toInt()}"
                     }
                 }
             }
@@ -110,7 +124,6 @@ fun BarChartView(modifier: Modifier, list: List<BarEntry>) {
             }
 
 
-          //  barChart.axisLeft.setDrawGridLines(false)
             barChart.axisRight.isEnabled = false
 
             barChart.invalidate()  // Refresh chart
