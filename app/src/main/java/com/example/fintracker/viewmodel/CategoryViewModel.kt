@@ -42,8 +42,9 @@ class CategoryViewModel @Inject constructor(private val repo: ExpenseRepository)
     fun getExpensesByCategory(date:String){
         viewModelScope.launch {
             categoryLiveData.value?.let {
-                if(it != "Category"){
-                    repo.getExpensesByCategory(it,date).collectLatest { data ->
+                val d = date.formatYearMonth()
+                if(it != "Category" && d.isNotEmpty()){
+                    repo.getExpensesByCategory(it,d).collectLatest { data ->
                         _expenseByCategoryLiveData.value = data
                     }
                 }
