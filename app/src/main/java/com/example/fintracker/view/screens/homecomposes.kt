@@ -62,6 +62,7 @@ fun HomeScreen(navController:NavController){
                 .padding(top = 20.dp), onclick = { date,month ->
                 viewModel.updateDate(date)
                 viewModel.updateMonth(month)
+                viewModel.getExpensesByDate()
             }, label = dateState.value)
             TopCardView(modifier = Modifier.constrainAs(expenseCardId){
                 top.linkTo(dateId.bottom)
