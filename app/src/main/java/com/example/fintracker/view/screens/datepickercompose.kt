@@ -1,12 +1,11 @@
 package com.example.fintracker.view.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,11 +26,12 @@ import java.util.Locale
 import com.example.fintracker.utils.AppConstants
 import com.example.fintracker.utils.getMonthFromDate
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerBox(modifier: Modifier,label:String, onclick : (date:String,month:String)->Unit) {
     val dateState = remember { mutableStateOf(label) }
     val openDialog = remember { mutableStateOf(false) }
-
+    val state = rememberDatePickerState()
     ConstraintLayout(modifier = modifier) {
         val (titleID,iconId) = createRefs()
         Text(text = "Spend in ${dateState.value}", fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.constrainAs(titleID){
@@ -50,7 +50,7 @@ fun DatePickerBox(modifier: Modifier,label:String, onclick : (date:String,month:
             )
         }
         if (openDialog.value) {
-            DatePickerView {
+            DatePickerView(state) {
                 dateState.value = it.getMonthFromDate()
                 openDialog.value = false
                 onclick.invoke(it,dateState.value)
@@ -61,12 +61,12 @@ fun DatePickerBox(modifier: Modifier,label:String, onclick : (date:String,month:
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerView(onclick : (data:String)->Unit){
+fun DatePickerView(dPickerState: DatePickerState = rememberDatePickerState() ,onclick : (data:String)->Unit){
     val dateState = remember { mutableStateOf("") }
-    val datePickerState = rememberDatePickerState()
-   Column {
+    Column {
            DatePickerDialog(
-               onDismissRequest = { onclick.invoke(dateState.value) },
+               onDismissRequest = {
+                   onclick.invoke(dateState.value) },
                confirmButton = {
                    TextButton(onClick = {
                        onclick.invoke(dateState.value)
@@ -75,12 +75,13 @@ fun DatePickerView(onclick : (data:String)->Unit){
                    }
                }
            ) {
-               DatePicker(state = datePickerState, showModeToggle = false)
-               LaunchedEffect(datePickerState.selectedDateMillis) {
-                   datePickerState.selectedDateMillis?.let { millis ->
-                       dateState.value = SimpleDateFormat(AppConstants.YYYY_MM_DD, Locale.getDefault()).format(
-                           Date(millis)
-                       )
+               DatePicker(state = dPickerState, showModeToggle = false)
+               LaunchedEffect(dPickerState.selectedDateMillis) {
+                   dPickerState.selectedDateMillis?.let { millis ->
+                       dateState.value =
+                           SimpleDateFormat(AppConstants.YYYY_MM_DD, Locale.getDefault()).format(
+                               Date(millis)
+                           )
                    }
                }
            }

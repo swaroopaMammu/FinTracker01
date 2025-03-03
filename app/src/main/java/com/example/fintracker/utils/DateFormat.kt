@@ -25,7 +25,7 @@ fun getCurrentMonth(): String {
 
 fun getCurrentYearMonth(): String {
     val calendar = Calendar.getInstance()
-    val formatter = SimpleDateFormat("yyyy_MM", Locale.ENGLISH)
+    val formatter = SimpleDateFormat("yyyy_MM_dd", Locale.ENGLISH)
     return formatter.format(calendar.time)
 }
 
@@ -55,4 +55,13 @@ fun String.getYearFromDate(): String {
     val calendar = Calendar.getInstance()
     calendar.time = date!!
     return calendar.get(Calendar.YEAR).toString()
+}
+
+fun String.formatYearMonth(): String {
+    if(this.isEmpty()){
+        return ""
+    }
+    val inputFormat = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("yyyy_MM", Locale.getDefault())
+    return outputFormat.format(inputFormat.parse(this)!!)
 }

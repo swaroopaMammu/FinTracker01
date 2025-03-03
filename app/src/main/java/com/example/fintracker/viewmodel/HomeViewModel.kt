@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fintracker.data.db.entity.ExpenseModel
 import com.example.fintracker.data.repository.ExpenseRepository
+import com.example.fintracker.utils.formatYearMonth
 import com.example.fintracker.utils.getCurrentMonth
 import com.example.fintracker.utils.getCurrentYearMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +35,11 @@ class HomeViewModel @Inject constructor(private val repo: ExpenseRepository) : V
     private val _monthlyBudgetLiveData = MutableStateFlow("")
     val monthlyBudgetLiveData: StateFlow<String> = _monthlyBudgetLiveData.asStateFlow()
 
+
+    init {
+        getTotalBudgetByMonthYear()
+    }
+
     fun updateMonth(date:String){
         _monthLiveData.value = date
     }
@@ -45,8 +51,11 @@ class HomeViewModel @Inject constructor(private val repo: ExpenseRepository) : V
     fun getTotalSpendByMonth(){
         viewModelScope.launch {
             dateLiveData.value?.let {
-                repo.getTotalSpendByMonth(it)?.collectLatest { data ->
-                    _totalSpendLiveData.value = data
+                val date = it.formatYearMonth()
+                if(date.isNotEmpty()){
+                    repo.getTotalSpendByMonth(date)?.collectLatest { data ->
+                        _totalSpendLiveData.value = data
+                    }
                 }
             }
         }
@@ -55,9 +64,12 @@ class HomeViewModel @Inject constructor(private val repo: ExpenseRepository) : V
     fun getExpensesByDate(){
         viewModelScope.launch {
             dateLiveData.value?.let {
-                repo.getExpensesByDate(it).collectLatest { data ->
-                    _expenseByMonthLiveData.value = data
-                }
+                val date = it.formatYearMonth()
+               if(date.isNotEmpty()){
+                   repo.getExpensesByDate(date).collectLatest { data ->
+                       _expenseByMonthLiveData.value = data
+                   }
+               }
             }
         }
     }
@@ -65,8 +77,11 @@ class HomeViewModel @Inject constructor(private val repo: ExpenseRepository) : V
      fun getTotalBudgetByMonthYear(){
          viewModelScope.launch {
              dateLiveData.value?.let {
-                 repo.getTotalBudgetByMonthYear(it)?.collectLatest { data ->
-                     _monthlyBudgetLiveData.value = data.toString()
+                 val date = it.formatYearMonth()
+                 if(date.isNotEmpty()) {
+                     repo.getTotalBudgetByMonthYear(date)?.collectLatest { data ->
+                         _monthlyBudgetLiveData.value = data.toString()
+                     }
                  }
              }
          }
