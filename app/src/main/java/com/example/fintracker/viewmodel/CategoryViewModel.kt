@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.fintracker.data.db.entity.BudgetModel
 import com.example.fintracker.data.db.entity.ExpenseModel
 import com.example.fintracker.data.repository.ExpenseRepository
+import com.example.fintracker.utils.formatDateMonth
+import com.example.fintracker.utils.formatYearMonth
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -66,27 +68,31 @@ class CategoryViewModel @Inject constructor(private val repo: ExpenseRepository)
 
     fun getTotalSpendByCategoryAndMonth(date:String) {
         viewModelScope.launch {
-            repo.getTotalSpendByCategoryAndMonth(date)
-                .collectLatest { data ->
-                    if (data.isNotEmpty()) {
-                        val list = data.map { PieEntry(it.total.toFloat(), it.category) }
-                        withContext(Dispatchers.Main) {
-                            _totalByCategoryLiveData.value = list
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            _totalByCategoryLiveData.value = emptyList()
-                        }
-                    }
-                }
+            val d = date.formatYearMonth()
+         if(d.isNotEmpty()){
+             repo.getTotalSpendByCategoryAndMonth(d)
+                 .collectLatest { data ->
+                     if (data.isNotEmpty()) {
+                         val list = data.map { PieEntry(it.total.toFloat(), it.category) }
+                         withContext(Dispatchers.Main) {
+                             _totalByCategoryLiveData.value = list
+                         }
+                     } else {
+                         withContext(Dispatchers.Main) {
+                             _totalByCategoryLiveData.value = emptyList()
+                         }
+                     }
+                 }
+         }
         }
     }
 
     fun getBudgetByCategoryAndMonth(date:String) {
         viewModelScope.launch {
             categoryLiveData.value?.let {
-                if(it != "Category"){
-                    repo.getBudgetByCategoryAndMonth(date,it).collectLatest { d ->
+                val d = date.formatYearMonth()
+                if(it != "Category" && d.isNotEmpty()){
+                    repo.getBudgetByCategoryAndMonth(d,it).collectLatest { d ->
                         _categoryBudgetLiveData.value = d.toString()
                     }
                 }
