@@ -110,7 +110,7 @@ fun HomeScreen(navController:NavController){
                 Text(text = "Categories")
             }
 
-            Text(text = "Recent Expenses", fontSize = 18.sp, fontWeight = FontWeight.Bold ,modifier = Modifier.constrainAs(titleId) {
+            Text(text = "Monthly Expenses", fontSize = 18.sp, fontWeight = FontWeight.Bold ,modifier = Modifier.constrainAs(titleId) {
                 top.linkTo(addNewBtnId.top)
                 bottom.linkTo(addNewBtnId.bottom)
                 start.linkTo(parent.start,margin = 16.dp)

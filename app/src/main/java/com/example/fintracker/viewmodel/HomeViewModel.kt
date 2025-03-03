@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fintracker.data.db.entity.BudgetModel
 import com.example.fintracker.data.db.entity.ExpenseModel
 import com.example.fintracker.data.repository.ExpenseRepository
 import com.example.fintracker.utils.getCurrentMonth
