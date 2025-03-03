@@ -1,7 +1,6 @@
 package com.example.fintracker.data.db.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -25,10 +24,6 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expense_table WHERE expId = :id")
     fun getExpensesDataById(id:Int): Flow<ExpenseModel?>
-
-    @Query("SELECT * FROM expense_table")
-    fun getExpensesData(): Flow<List<ExpenseModel>>
-
 
     @Query("SELECT * FROM expense_table WHERE date LIKE :date || '%'")
     fun getExpensesByDate(date:String):Flow<List<ExpenseModel>>

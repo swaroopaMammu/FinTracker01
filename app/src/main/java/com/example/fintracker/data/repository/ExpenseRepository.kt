@@ -1,6 +1,5 @@
 package com.example.fintracker.data.repository
 
-import androidx.compose.runtime.State
 import com.example.fintracker.data.db.dao.BudgetDao
 import com.example.fintracker.data.db.dao.ExpenseDao
 import com.example.fintracker.data.db.entity.BudgetModel
@@ -12,18 +11,6 @@ class ExpenseRepository @Inject constructor(private val expenseDao: ExpenseDao,p
   suspend fun  insertBudget(budgetModel: BudgetModel){
       budgetDao.insertBudget(budgetModel)
   }
-
-  suspend fun updateBudget(budgetModel: BudgetModel){
-      budgetDao.updateBudget(budgetModel)
-  }
-
-  suspend fun deleteBudget(budgetModel: BudgetModel){
-      budgetDao.deleteBudget(budgetModel)
-  }
-
-  fun getBudgetByCategory(category: String,date:String) = budgetDao.getBudgetByCategory(category,date)
-
-  fun getAllBudget() = budgetDao.getAllBudget()
   fun getTotalBudgetByMonthYear(yearMonth: String) = budgetDao.getTotalBudgetByMonthYear(yearMonth)
 
   fun getBudgetByCategoryAndMonth(yearMonth: String,category:String) = budgetDao.getBudgetByCategoryAndMonth(yearMonth,category)
@@ -39,8 +26,6 @@ class ExpenseRepository @Inject constructor(private val expenseDao: ExpenseDao,p
         expenseDao.deleteExpenseById(id)
     }
     fun getExpensesDataById(id: Int) = expenseDao.getExpensesDataById(id)
-
-    fun getExpensesData() = expenseDao.getExpensesData()
 
 
     fun getExpensesByDate(date: String) = expenseDao.getExpensesByDate(date)

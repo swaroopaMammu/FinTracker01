@@ -45,7 +45,6 @@ import com.example.fintracker.utils.AppConstants
 import com.example.fintracker.utils.formatDateMonth
 import com.example.fintracker.viewmodel.HomeViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navController:NavController){
     val viewModel:HomeViewModel = hiltViewModel()

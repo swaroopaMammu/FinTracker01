@@ -73,23 +73,4 @@ class HomeViewModel @Inject constructor(private val repo: ExpenseRepository) : V
          }
     }
 
-    fun updateBudget(budgetModel: BudgetModel){
-        viewModelScope.launch {
-            repo.updateBudget(budgetModel)
-        }
-    }
-
-     fun deleteBudget(budgetModel: BudgetModel){
-        viewModelScope.launch {
-            repo.deleteBudget(budgetModel)
-        }
-    }
-
-    fun getBudgetByCategory(category: String,date:String) = repo.getBudgetByCategory(category,date)
-
-    fun getAllBudget() = repo.getAllBudget()
-
-
-
-
 }
